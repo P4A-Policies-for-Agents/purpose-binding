@@ -1,0 +1,80 @@
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: Extension
+metadata:
+  labels:
+    title: Purpose Binding
+    category: Compliance
+    description: >-
+      Enforces purpose limitation on MCP tools/call. Each call must declare a
+      processing purpose (header or JWT claim) that is permitted for the target
+      tool; disallowed or missing purposes are rejected. GDPR Art. 5(1)(b).
+    metadata/interfaceScope: api
+    metadata/capabilities/assetTypes: mcp
+spec:
+  extends:
+    - name: extension-definition
+      namespace: default
+  properties:
+    source:
+      type: string
+      description: Where the declared purpose comes from — a request header or a JWT claim.
+      enum:
+        - header
+        - claim
+      default: header
+    headerName:
+      type: string
+      description: Request header carrying the declared purpose (when source=header).
+      default: "x-processing-purpose"
+    claimName:
+      type: string
+      description: >-
+        JWT claim carrying the declared purpose (when source=claim). The JWT is
+        read from the Authorization Bearer token; signature is NOT verified here —
+        pair with a JWT Validation policy in front.
+      default: "purpose"
+    allowedPurposes:
+      type: array
+      description: >-
+        Global fallback list of permitted purposes, used for a tool that has no
+        entry in toolPurposes. Empty means "not governed" for such tools.
+      default: []
+      items:
+        type: string
+    toolPurposes:
+      type: array
+      description: Per-tool allow-lists. Overrides allowedPurposes for the named tool.
+      default: []
+      items:
+        type: object
+        properties:
+          tool:
+            type: string
+            description: MCP tool name this entry governs (from tools/call params.name).
+          purposes:
+            type: array
+            description: Purposes permitted for this tool.
+            items:
+              type: string
+        required:
+          - tool
+          - purposes
+    enforceMethods:
+      type: array
+      description: >-
+        MCP methods to enforce purpose on. Empty defaults to tools/call only.
+        (e.g. add resources/read, prompts/get.)
+      default: []
+      items:
+        type: string
+    failMode:
+      type: string
+      description: >-
+        Behavior for a governed tool with a missing/disallowed purpose. 'closed'
+        rejects (correct default for a compliance control); 'open' allows + logs.
+      enum:
+        - closed
+        - open
+      default: closed
+  required: []
