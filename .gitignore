@@ -1,0 +1,39 @@
+# --- Rust / PDK build artifacts (never commit) ---
+target/
+**/target/
+.pdk/
+**/.pdk/
+
+# --- PDK local playground: registration + TLS material are SECRETS ---
+registration.yaml
+certificate.yaml
+**/playground/config/registration.yaml
+**/playground/config/certificate.yaml
+**/playground/config/custom-policies/*
+!**/playground/config/custom-policies/note.txt
+
+# --- Anypoint / Exchange caches & credential material ---
+.exchange/
+**/.exchange/
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+
+# --- Environment / secret files ---
+.env
+.env.*
+*.secret
+secrets.json
+**/config.local.json
+
+# demo local endpoints (real, environment-specific)
+demo/env.local.sh
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

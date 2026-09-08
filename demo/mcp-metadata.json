@@ -1,0 +1,31 @@
+{
+  "protocolVersion": "2025-03-26",
+  "transport": { "kind": "streamableHttp", "path": "/mcp" },
+  "capabilities": { "tools": { "listChanged": true } },
+  "tools": [
+    {
+      "name": "lookup_customer",
+      "description": "Looks up a customer profile by its unique customer identifier and returns the stored contact and account summary. Access to this tool is governed by the Purpose Binding policy: the caller must declare a processing purpose that is permitted for the tool (for example customer_support or billing); calls with a missing or disallowed purpose are rejected at the gateway before this tool is ever invoked.",
+      "inputSchema": {
+        "type": "object",
+        "required": ["customerId"],
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The unique identifier of the customer whose profile record should be retrieved from the store."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "required": ["fullName"],
+        "properties": {
+          "fullName": { "type": "string", "description": "The customer's full legal name as recorded in the master profile store." },
+          "emailAddress": { "type": "string", "description": "The customer's primary contact email address for account correspondence." },
+          "accountTier": { "type": "string", "description": "The customer's subscription or loyalty tier, for example standard or premium." },
+          "lifetimeValue": { "type": "number", "description": "The customer's lifetime value in US dollars, used for account prioritisation." }
+        }
+      }
+    }
+  ]
+}

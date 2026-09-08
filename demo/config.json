@@ -1,0 +1,8 @@
+{
+  "source": "header",
+  "headerName": "x-processing-purpose",
+  "toolPurposes": [
+    { "tool": "lookup_customer", "purposes": ["customer_support", "billing"] }
+  ],
+  "failMode": "closed"
+}
